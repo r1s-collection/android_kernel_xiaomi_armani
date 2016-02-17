@@ -352,10 +352,17 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
-AFLAGS_MODULE   =
+
+OPTIMIZFLAGS	= -mcpu=cortex-a15 -mtune=cortex-a15 -mvectorize-with-neon-quad \
+		  -fgcse-las -fgcse-sm -fipa-pta -fivopts -fomit-frame-pointer \
+		  -frename-registers -fsection-anchors -ftracer \
+		  -ftree-loop-im -ftree-loop-ivcanon -funsafe-loop-optimizations \
+		  -funswitch-loops -fweb
+
+CFLAGS_MODULE   = -DMODULE $(OPTIMIZFLAGS)
+AFLAGS_MODULE   = -DMODULE $(OPTIMIZFLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
+CFLAGS_KERNEL	= $(OPTIMIZFLAGS)
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -373,7 +380,11 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks
+		   -fno-delete-null-pointer-checks \
+		   -Wno-array-bounds -Wno-clobbered  \
+		   -Wno-maybe-uninitialized \
+		   -Wno-strict-overflow
+
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
