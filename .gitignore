@@ -83,4 +83,12 @@ GTAGS
 
 *.orig
 *~
+
+# add my ignores
+dtbTool
+mkbootimg
+ramdisk.img
+smd_rpc_sym.c
+ist30xx_wintek.cms
+
 \#*#
